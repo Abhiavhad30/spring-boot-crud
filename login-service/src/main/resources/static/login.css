@@ -1,0 +1,70 @@
+/* common.css */
+
+/* Reset some default styles */
+body, h2, form {
+margin: 0;
+padding: 0;
+font-family: Arial, sans-serif;
+}
+
+/* Page background and centering */
+body {
+background-color: #f4f6f8;
+display: flex;
+justify-content: center;
+align-items: center;
+height: 100vh;
+}
+
+/* Container box */
+.container {
+background: #ffffff;
+padding: 30px 40px;
+border-radius: 10px;
+box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+width: 300px;
+}
+
+/* Heading */
+.container h2 {
+text-align: center;
+margin-bottom: 20px;
+color: #333333;
+}
+
+/* Input fields */
+.container input[type="text"],
+.container input[type="password"] {
+width: 100%;
+padding: 10px 12px;
+margin: 8px 0;
+border: 1px solid #cccccc;
+border-radius: 6px;
+font-size: 14px;
+box-sizing: border-box;
+transition: border 0.3s;
+}
+
+.container input[type="text"]:focus,
+.container input[type="password"]:focus {
+border-color: #007BFF;
+outline: none;
+}
+
+/* Submit button */
+.container button {
+width: 100%;
+padding: 10px;
+margin-top: 10px;
+background-color: #007BFF;
+border: none;
+border-radius: 6px;
+color: #ffffff;
+font-size: 15px;
+cursor: pointer;
+transition: background-color 0.3s;
+}
+
+.container button:hover {
+background-color: #0056b3;
+}
