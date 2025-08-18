@@ -23,8 +23,8 @@
         <div class="mb-3">
             <select class="form-control" th:field="*{role}" required>
                 <option value="">Select Role</option>
-                <option value="ROLE_ADMIN">Admin</option>
-                <option value="ROLE_USER">User</option>
+                <option value="ADMIN">Admin</option>
+                <option value="USER">User</option>
             </select>
         </div>
 
@@ -37,79 +37,3 @@
 </body>
 </html>
 
-<!--<!DOCTYPE html>-->
-<!--<html xmlns:th="http://www.thymeleaf.org">-->
-<!--<head>-->
-<!--    <title>Edit User</title>-->
-<!--    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">-->
-<!--</head>-->
-<!--<body class="bg-light">-->
-<!--<div class="container mt-5">-->
-<!--    <h3>Edit User</h3>-->
-<!--    <form th:action="@{'/admin/edit-user/' + ${user.id}}" th:object="${user}" method="post">-->
-<!--        <div class="mb-3">-->
-<!--            <input type="text" class="form-control" th:field="*{username}" placeholder="Username" required />-->
-<!--        </div>-->
-<!--        <div class="mb-3">-->
-<!--            <input type="password" class="form-control" th:field="*{password}" placeholder="Password" required />-->
-<!--        </div>-->
-<!--        <div class="mb-3">-->
-<!--            <select class="form-control" th:field="*{role}" required>-->
-<!--                <option value="">Select Role</option>-->
-<!--                <option value="ROLE_ADMIN">Admin</option>-->
-<!--                <option value="ROLE_USER">User</option>-->
-<!--            </select>-->
-<!--        </div>-->
-<!--        <button type="submit" class="btn btn-warning">Update</button>-->
-<!--        <a th:href="@{/admin/show-users}" class="btn btn-secondary">Cancel</a>-->
-<!--    </form>-->
-<!--</div>-->
-<!--</body>-->
-<!--</html>-->
-
-
-<!--&lt;!&ndash;<!DOCTYPE html>&ndash;&gt;-->
-<!--&lt;!&ndash;<html xmlns:th="http://www.thymeleaf.org">&ndash;&gt;-->
-<!--&lt;!&ndash;<head>&ndash;&gt;-->
-<!--&lt;!&ndash;    <title>Edit User</title>&ndash;&gt;-->
-<!--&lt;!&ndash;&lt;!&ndash;    <link rel="stylesheet" href="/css/common.css">&ndash;&gt;&ndash;&gt;-->
-<!--&lt;!&ndash;    <link rel="stylesheet" th:href="@{/admin.css}">&ndash;&gt;-->
-
-<!--&lt;!&ndash;&lt;!&ndash;    <link rel="stylesheet" href="http://localhost:8083/css/admin.css" />&ndash;&gt;&ndash;&gt;-->
-
-<!--&lt;!&ndash;</head>&ndash;&gt;-->
-<!--&lt;!&ndash;<body>&ndash;&gt;-->
-<!--&lt;!&ndash;<div class="container">&ndash;&gt;-->
-<!--&lt;!&ndash;    <h2>Edit User</h2>&ndash;&gt;-->
-<!--&lt;!&ndash;    <form th:action="@{/admin/edit}" th:object="${user}" method="post">&ndash;&gt;-->
-<!--&lt;!&ndash;        <input type="hidden" th:field="*{id}">&ndash;&gt;-->
-<!--&lt;!&ndash;        <input type="text" th:field="*{username}" placeholder="Username" required>&ndash;&gt;-->
-<!--&lt;!&ndash;        <input type="password" th:field="*{password}" placeholder="Password" required>&ndash;&gt;-->
-<!--&lt;!&ndash;        <input type="text" th:field="*{role}" placeholder="Role (admin/user)" required>&ndash;&gt;-->
-<!--&lt;!&ndash;        <button type="submit">Update</button>&ndash;&gt;-->
-<!--&lt;!&ndash;    </form>&ndash;&gt;-->
-<!--&lt;!&ndash;    <a href="/admin/show-users" class="btn">Cancel</a>&ndash;&gt;-->
-<!--&lt;!&ndash;</div>&ndash;&gt;-->
-<!--&lt;!&ndash;</body>&ndash;&gt;-->
-<!--&lt;!&ndash;</html>&ndash;&gt;-->
-
-
-<!--&lt;!&ndash;<!DOCTYPE html>&ndash;&gt;-->
-<!--&lt;!&ndash;<html xmlns:th="http://www.w3.org/1999/xhtml">&ndash;&gt;-->
-<!--&lt;!&ndash;<head><title>Edit User</title>&ndash;&gt;-->
-<!--&lt;!&ndash;&lt;!&ndash;    <link rel="stylesheet" th:href="@{/css/admin.css}" />&ndash;&gt;&ndash;&gt;-->
-<!--&lt;!&ndash;    <link rel="stylesheet" href="http://localhost:8083/css/admin.css" />&ndash;&gt;-->
-
-
-<!--&lt;!&ndash;</head>&ndash;&gt;-->
-<!--&lt;!&ndash;<body>&ndash;&gt;-->
-<!--&lt;!&ndash;<h2>Edit User</h2>&ndash;&gt;-->
-<!--&lt;!&ndash;<form method="post" action="/admin/edit">&ndash;&gt;-->
-<!--&lt;!&ndash;    <input type="hidden" name="id" th:value="${user.id}"/>&ndash;&gt;-->
-<!--&lt;!&ndash;    Username: <input type="text" name="username" th:value="${user.username}"/><br/>&ndash;&gt;-->
-<!--&lt;!&ndash;    Password: <input type="text" name="password" th:value="${user.password}"/><br/>&ndash;&gt;-->
-<!--&lt;!&ndash;    Role: <input type="text" name="role" th:value="${user.role}"/><br/>&ndash;&gt;-->
-<!--&lt;!&ndash;    <input type="submit" value="Update"/>&ndash;&gt;-->
-<!--&lt;!&ndash;</form>&ndash;&gt;-->
-<!--&lt;!&ndash;</body>&ndash;&gt;-->
-<!--&lt;!&ndash;</html>&ndash;&gt;-->

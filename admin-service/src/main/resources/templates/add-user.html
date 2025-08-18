@@ -17,8 +17,8 @@
         <div class="mb-3">
             <select class="form-control" th:field="*{role}" required>
                 <option value="">Select Role</option>
-                <option value="ROLE_ADMIN">Admin</option>
-                <option value="ROLE_USER">User</option>
+                <option value="ADMIN">Admin</option>
+                <option value="USER">User</option>
             </select>
         </div>
         <button type="submit" class="btn btn-success">Save</button>
@@ -29,26 +29,3 @@
 </html>
 
 
-<!--<!DOCTYPE html>-->
-<!--<html xmlns:th="http://www.thymeleaf.org">-->
-<!--<head>-->
-<!--    <title>Add User</title>-->
-<!--    <link rel="stylesheet" th:href="@{/admin.css}">-->
-
-<!--    &lt;!&ndash;    <link rel="stylesheet" href="/css/common.css">&ndash;&gt;-->
-<!--&lt;!&ndash;    <link rel="stylesheet" href="http://localhost:8083/css/admin.css" />&ndash;&gt;-->
-
-<!--</head>-->
-<!--<body>-->
-<!--<div class="container">-->
-<!--    <h2>Add User</h2>-->
-<!--    <form th:action="@{/admin/add-user}" th:object="${user}" method="post">-->
-<!--        <input type="text" th:field="*{username}" placeholder="Username" required>-->
-<!--        <input type="password" th:field="*{password}" placeholder="Password" required>-->
-<!--        <input type="text" th:field="*{role}" placeholder="Role (admin/user)" required>-->
-<!--        <button type="submit">Save</button>-->
-<!--    </form>-->
-<!--    <a href="/admin/dashboard" class="btn">Cancel</a>-->
-<!--</div>-->
-<!--</body>-->
-<!--</html>-->

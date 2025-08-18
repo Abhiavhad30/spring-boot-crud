@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 
 @Controller
@@ -32,7 +32,9 @@ public class LoginController {
                 //return "redirect:/admin/dashboard";
                 System.out.println("Redirecting to: /admin/dashboard");
 
-                return "redirect:http://localhost:8080/admin/dashboard";
+               return "redirect:http://localhost:8080/admin/dashboard";
+                //return "redirect:/admin/dashboard";
+
 
             } else {
                 model.addAttribute("user", user);
@@ -40,6 +42,8 @@ public class LoginController {
                 System.out.println("Redirecting to: /user/dashboard");
 
                 return "redirect:http://localhost:8080/user/dashboard";
+                //return "redirect:/user/dashboard";
+
 
             }
         } else {
@@ -47,6 +51,33 @@ public class LoginController {
             return "login";
         }
     }
+
+    @GetMapping("/register")
+    public String registerForm(){
+        return "register";
+
+    }
+
+    @PostMapping("/register")
+    public String registerSubmit(@RequestParam String username,
+                                 @RequestParam String password,
+                                 @RequestParam String role,
+                                 RedirectAttributes redirectAttributes){
+        if(userRepository.findByUsername(username)!=null){
+            redirectAttributes.addFlashAttribute("error","username already exits!!");
+            return "register";
+        }
+        User newuser=new User();
+        newuser.setUsername(username);
+        newuser.setPassword(password);
+        newuser.setRole(role);
+
+        userRepository.save(newuser);
+        redirectAttributes.addFlashAttribute("message","Registration successful!");
+        return "redirect:/login";
+
+    }
+
 
 
 
