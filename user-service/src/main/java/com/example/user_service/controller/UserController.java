@@ -18,15 +18,17 @@ public class UserController {
     private UserRepository userRepository;
 
     @GetMapping("/dashboard")
-    public String dashboard(@RequestParam String username,@RequestParam String role , Model model){
+    public String dashboard(@RequestParam String username ,@RequestParam String role , Model model){
         User user= userRepository.findByUsername(username);
         if(user != null){
             model.addAttribute("username", user.getUsername());
             model.addAttribute("role", user.getRole());
+            model.addAttribute("email",user.getEmail());
 
         }else {
             model.addAttribute("username", username);
             model.addAttribute("role", role);
+            model.addAttribute("email","");
         }
         return "user-dashboard";
     }
