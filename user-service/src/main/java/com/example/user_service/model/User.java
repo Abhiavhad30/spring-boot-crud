@@ -1,7 +1,9 @@
-package com.example.login_service.model;
+package com.example.user_service.model;
+
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+
 
 @Document(collection = "users")
 public class User {
@@ -11,34 +13,6 @@ public class User {
     private String username;
     private String password;
     private String role;
-    private String resetToken;
-
-    private String email;
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getResetToken() {
-        return resetToken;
-    }
-
-    public void setResetToken(String resetToken) {
-        this.resetToken = resetToken;
-    }
-
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
 
     public String getId() {
         return id;
@@ -56,6 +30,14 @@ public class User {
         this.username = username;
     }
 
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
     public String getRole() {
         return role;
     }
@@ -63,7 +45,6 @@ public class User {
     public void setRole(String role) {
         this.role = role;
     }
-
 
 
 }

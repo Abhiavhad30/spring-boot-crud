@@ -65,46 +65,4 @@ public class AdminController {
         return "redirect:http://localhost:8080/login"; // Gateway's login URL
 
     }
-
-
-
-
-//    @GetMapping("/dashboard")
-//    public String dashboard(Model model) {
-//        model.addAttribute("users", userRepository.findAll());
-//        return "admin-dashboard";
-//    }
-//
-//    @GetMapping("/add-user")
-//    public String addUserForm(Model model) {
-//        model.addAttribute("user", new User());
-//        return "add-user";
-//    }
-//
-//    @PostMapping("/add-user")
-//    public String addUser(@ModelAttribute User user) {
-//        userRepository.save(user);
-//        return "redirect:/admin/admin-dashboard";
-//    }
-//
-//    @GetMapping("/edit/{id}")
-//    public String editUserForm(@PathVariable String id, Model model) {
-//        model.addAttribute("user", userRepository.findById(id).orElse(null));
-//        return "edit-user";
-//    }
-//
-//    @PostMapping("/edit")
-//    public String updateUser(@ModelAttribute User user) {
-//        userRepository.save(user);
-//        return "redirect:/admin/admin-dashboard";
-//    }
-//
-//    @GetMapping("/delete/{id}")
-//    public String deleteUser(@PathVariable String id) {
-//        userRepository.deleteById(id);
-//        return "redirect:/admin/admin-dashboard";
-//    }
-
-
-
 }
