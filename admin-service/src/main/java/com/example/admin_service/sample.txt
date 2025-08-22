@@ -1,0 +1,387 @@
+AppConfig.java->package com.example.admin_service.config;
+
+                import org.springframework.context.annotation.Bean;
+                import org.springframework.context.annotation.Configuration;
+                import org.springframework.web.client.RestTemplate;
+
+                @Configuration
+                public class AppConfig {
+
+                    @Bean
+                    public RestTemplate restTemplate(){
+                        return new RestTemplate();
+                    }
+
+
+                }
+AdminController->package com.example.admin_service.controller;
+
+                 import com.example.admin_service.model.User;
+                 import com.example.admin_service.repository.UserRepository;
+                 import jakarta.servlet.http.HttpSession;
+                 import org.springframework.beans.factory.annotation.Autowired;
+                 import org.springframework.stereotype.Controller;
+                 import org.springframework.ui.Model;
+                 import org.springframework.web.bind.annotation.*;
+
+                 import java.util.List;
+
+                 @Controller
+                 @RequestMapping("/admin")
+                 public class AdminController {
+
+                     @Autowired
+                     private UserRepository userRepository;
+
+                     @GetMapping("/dashboard")
+                     public String dashboard() {
+                         return "admin-dashboard"; // Just shows buttons
+                     }
+
+                     @GetMapping("/show-users")
+                     public String showUsers(Model model) {
+                         model.addAttribute("users", userRepository.findAll());
+                         return "show-users";
+                     }
+
+                     @GetMapping("/add-user")
+                     public String addUserForm(Model model) {
+                         model.addAttribute("user", new User());
+                         return "add-user";
+                     }
+
+                     @PostMapping("/add-user")
+                     public String addUser(@ModelAttribute User user) {
+                         userRepository.save(user);
+                         return "redirect:/admin/show-users";
+                     }
+
+                     @GetMapping("/edit-user/{id}")
+                     public String editUserForm(@PathVariable String id, Model model) {
+
+                         model.addAttribute("user", userRepository.findById(id).orElse(null));
+                         return "edit-user";
+                     }
+
+                     @PostMapping("/edit-user")
+                     public String updateUser(@ModelAttribute User user) {
+                         userRepository.save(user);
+                         return "redirect:/admin/show-users";
+                     }
+
+                     @GetMapping("/delete/{id}")
+                     public String deleteUser(@PathVariable String id) {
+                         userRepository.deleteById(id);
+                         return "redirect:/admin/show-users";
+                     }
+                     @GetMapping("/logout")
+                     public String logout(HttpSession session) {
+                         session.invalidate(); // Clear session
+                         //return "redirect:/login"; // Redirect to login page
+                         return "redirect:http://localhost:8080/login"; // Gateway's login URL
+
+                     }
+                 }
+AdminProductController->package com.example.admin_service.controller;
+
+                        import com.example.admin_service.dto.Product;
+                        import com.example.admin_service.service.ProductClientService;
+                        import org.springframework.beans.factory.annotation.Autowired;
+                        import org.springframework.stereotype.Controller;
+                        import org.springframework.ui.Model;
+                        import org.springframework.web.bind.annotation.*;
+
+                        import java.util.List;
+
+                        @Controller
+                        @RequestMapping("/admin/products")
+                        public class AdminProductController {
+
+                            @Autowired
+                            private ProductClientService productClientService;
+
+                            // Show list of products in admin dashboard
+                            @GetMapping
+                            public String listProducts(Model model) {
+                                List<Product> products = productClientService.getAllProducts();
+                                model.addAttribute("products", products);
+                                model.addAttribute("newProduct", new Product()); // For add form
+                                return "admin-products";  // Thymeleaf template for product management
+                            }
+
+                            // Add new product
+                            @PostMapping("/add")
+                            public String addProduct(@ModelAttribute Product product) {
+                                productClientService.addProduct(product);
+                                return "redirect:/admin/products";
+                            }
+
+                            // Update existing product
+                            @PostMapping("/update")
+                            public String updateProduct(@ModelAttribute Product product) {
+                                productClientService.updateProduct(product.getId(), product);
+                                return "redirect:/admin/products";
+                            }
+
+                            // Delete product by id
+                            @PostMapping("/delete/{id}")
+                            public String deleteProduct(@PathVariable String id) {
+                                productClientService.deleteProduct(id);
+                                return "redirect:/admin/products";
+                            }
+                        }
+dto/Product.java->package com.example.admin_service.dto;
+
+                  public class Product {
+
+                      private String id;
+                      private String name;
+                      private String company;
+                      private int quantity;
+                      private double price;
+
+                      public String getId() {
+                          return id;
+                      }
+
+                      public void setId(String id) {
+                          this.id = id;
+                      }
+
+                      public String getName() {
+                          return name;
+                      }
+
+                      public void setName(String name) {
+                          this.name = name;
+                      }
+
+                      public String getCompany() {
+                          return company;
+                      }
+
+                      public void setCompany(String company) {
+                          this.company = company;
+                      }
+
+                      public int getQuantity() {
+                          return quantity;
+                      }
+
+                      public void setQuantity(int quantity) {
+                          this.quantity = quantity;
+                      }
+
+                      public double getPrice() {
+                          return price;
+                      }
+
+                      public void setPrice(double price) {
+                          this.price = price;
+                      }
+
+                  }
+User->package com.example.admin_service.model;
+
+      import org.springframework.data.annotation.Id;
+      import org.springframework.data.mongodb.core.mapping.Document;
+
+      @Document(collection = "users")
+      public class User {
+
+          @Id
+          private String id;
+
+          private String username;
+          private String password;
+          private String role;
+
+          public String getUsername() {
+              return username;
+          }
+
+          public void setUsername(String username) {
+              this.username = username;
+          }
+
+          public String getId() {
+              return id;
+          }
+
+          public void setId(String id) {
+              this.id = id;
+          }
+
+          public String getPassword() {
+              return password;
+          }
+
+          public void setPassword(String password) {
+              this.password = password;
+          }
+
+          public String getRole() {
+              return role;
+          }
+
+          public void setRole(String role) {
+              this.role = role;
+          }
+
+
+
+      }
+UserRepository->package com.example.admin_service.repository;
+
+                import com.example.admin_service.model.User;
+                import org.springframework.data.mongodb.repository.MongoRepository;
+
+                import java.util.List;
+
+                public interface UserRepository extends MongoRepository<User,String> {
+                    List<User> findAll();
+                }
+ProductClientService used for use product-service in admin-service-->package com.example.admin_service.service;
+
+                                                                     import com.example.admin_service.dto.Product;
+                                                                     import org.springframework.beans.factory.annotation.Autowired;
+                                                                     import org.springframework.core.ParameterizedTypeReference;
+                                                                     import org.springframework.http.*;
+                                                                     import org.springframework.stereotype.Service;
+                                                                     import org.springframework.web.client.RestTemplate;
+
+                                                                     import java.util.List;
+
+                                                                     @Service
+                                                                     public class ProductClientService {
+
+                                                                         @Autowired
+                                                                         private RestTemplate restTemplate;
+
+                                                                         // Base URL configured to call product-service through API gateway
+                                                                         private final String PRODUCT_SERVICE_URL = "http://localhost:8080/api/products";
+
+                                                                         public List<Product> getAllProducts() {
+                                                                             ResponseEntity<List<Product>> response = restTemplate.exchange(
+                                                                                     PRODUCT_SERVICE_URL,
+                                                                                     HttpMethod.GET,
+                                                                                     null,
+                                                                                     new ParameterizedTypeReference<List<Product>>() {}
+                                                                             );
+                                                                             return response.getBody();
+                                                                         }
+
+                                                                         public Product addProduct(Product product) {
+                                                                             HttpHeaders headers = new HttpHeaders();
+                                                                             headers.setContentType(MediaType.APPLICATION_JSON);
+
+                                                                             HttpEntity<Product> request = new HttpEntity<>(product, headers);
+
+                                                                             return restTemplate.postForObject(PRODUCT_SERVICE_URL, request, Product.class);
+                                                                         }
+
+                                                                         public Product updateProduct(String productId, Product product) {
+                                                                             HttpHeaders headers = new HttpHeaders();
+                                                                             headers.setContentType(MediaType.APPLICATION_JSON);
+                                                                             HttpEntity<Product> request = new HttpEntity<>(product, headers);
+                                                                             ResponseEntity<Product> response = restTemplate.exchange(
+                                                                                     PRODUCT_SERVICE_URL + "/" + productId,
+                                                                                     HttpMethod.PUT,
+                                                                                     request,
+                                                                                     Product.class
+                                                                             );
+                                                                             return response.getBody();
+                                                                         }
+
+                                                                         public void deleteProduct(String productId) {
+                                                                             restTemplate.delete(PRODUCT_SERVICE_URL + "/" + productId);
+                                                                         }
+                                                                     }
+
+
+
+
+<!--<!DOCTYPE html>-->
+<!--<html xmlns:th="http://www.thymeleaf.org">-->
+<!--<head>-->
+<!--    <title>Admin Products Management</title>-->
+<!--    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />-->
+<!--</head>-->
+<!--<body>-->
+<!--<div class="container mt-5">-->
+<!--    <h2 class="mb-4">Product Management</h2>-->
+
+<!--    &lt;!&ndash; Add New Product Form &ndash;&gt;-->
+<!--    <div class="card mb-5">-->
+<!--        <div class="card-header bg-primary text-white">-->
+<!--            Add New Product-->
+<!--        </div>-->
+<!--        <div class="card-body">-->
+<!--            <form th:action="@{/admin/products/add}" th:object="${newProduct}" method="post" class="row g-3">-->
+<!--                <div class="col-md-3">-->
+<!--                    <input type="text" th:field="*{name}" class="form-control" placeholder="Product Name" required />-->
+<!--                </div>-->
+<!--                <div class="col-md-3">-->
+<!--                    <input type="text" th:field="*{company}" class="form-control" placeholder="Company Name" required />-->
+<!--                </div>-->
+<!--                <div class="col-md-2">-->
+<!--                    <input type="number" th:field="*{quantity}" class="form-control" placeholder="Quantity" required min="0" />-->
+<!--                </div>-->
+<!--                <div class="col-md-2">-->
+<!--                    <input type="number" step="0.01" th:field="*{price}" class="form-control" placeholder="Price" required min="0" />-->
+<!--                </div>-->
+<!--                <div class="col-md-2">-->
+<!--                    <button type="submit" class="btn btn-success w-100">Add Product</button>-->
+<!--                </div>-->
+<!--            </form>-->
+<!--        </div>-->
+<!--    </div>-->
+
+<!--    &lt;!&ndash; Products Table &ndash;&gt;-->
+<!--    <div class="table-responsive">-->
+<!--        <table class="table table-bordered table-hover align-middle text-center">-->
+<!--            <thead class="table-secondary">-->
+<!--            <tr>-->
+<!--                <th>Product Name</th>-->
+<!--                <th>Company</th>-->
+<!--                <th>Quantity</th>-->
+<!--                <th>Price</th>-->
+<!--                <th style="width: 180px;">Actions</th>-->
+<!--            </tr>-->
+<!--            </thead>-->
+<!--            <tbody>-->
+<!--            <tr th:each="product : ${products}">-->
+<!--                <form th:action="@{/admin/products/update}" th:object="${product}" method="post" style="display: contents;">-->
+<!--                    <td>-->
+<!--                        <input type="hidden" th:field="*{id}" />-->
+<!--                        <input type="text" th:field="*{name}" class="form-control" required />-->
+<!--                    </td>-->
+<!--                    <td>-->
+<!--                        <input type="text" th:field="*{company}" class="form-control" required />-->
+<!--                    </td>-->
+<!--                    <td>-->
+<!--                        <input type="number" th:field="*{quantity}" class="form-control" min="0" required />-->
+<!--                    </td>-->
+<!--                    <td>-->
+<!--                        <input type="number" th:field="*{price}" class="form-control" step="0.01" min="0" required />-->
+<!--                    </td>-->
+<!--                    <td class="d-flex justify-content-center gap-2">-->
+<!--                        <button type="submit" class="btn btn-primary btn-sm">Update</button>-->
+<!--                </form>-->
+<!--                <form th:action="@{/admin/products/delete/{id}(id=${product.id})}" method="post"-->
+<!--                      onsubmit="return confirm('Are you sure you want to delete this product?');" style="display: inline-block;">-->
+<!--                    <button type="submit" class="btn btn-danger btn-sm">Delete</button>-->
+<!--                </form>-->
+<!--                </td>-->
+<!--            </tr>-->
+<!--            </tbody>-->
+
+
+<!--        </table>-->
+<!--    </div>-->
+<!--</div>-->
+
+<!--&lt;!&ndash; Bootstrap JS Bundle &ndash;&gt;-->
+<!--<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>-->
+<!--</body>-->
+<!--</html>-->

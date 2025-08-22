@@ -8,6 +8,7 @@
         <outputRelativeToContentRoot value="true" />
         <module name="api-gateway" />
         <module name="login-service" />
+        <module name="product-service" />
         <module name="discovery-server" />
         <module name="user-service" />
         <module name="admin-service" />
@@ -20,6 +21,7 @@
       <module name="api-gateway" options="-parameters" />
       <module name="discovery-server" options="-parameters" />
       <module name="login-service" options="-parameters" />
+      <module name="product-service" options="-parameters" />
       <module name="user-service" options="-parameters" />
     </option>
   </component>

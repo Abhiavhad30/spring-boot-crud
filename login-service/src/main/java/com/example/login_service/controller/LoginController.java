@@ -29,6 +29,7 @@ public class LoginController {
                               HttpSession session) {
         User user = userRepository.findByUsername(username);
         if (user != null && user.getPassword().equals(password)) {
+            session.setAttribute("userId", user.getId());
             session.setAttribute("loggedInUsername",user.getUsername());
             session.setAttribute("role",user.getRole());
 
@@ -45,7 +46,10 @@ public class LoginController {
                 //model.addAttribute("user", user);
 //                return "redirect:/user/dashboard";
                 System.out.println("Redirecting to: /user/dashboard");
-                return "redirect:http://localhost:8080/user/dashboard?username=" + user.getUsername() + "&role=" + user.getRole();
+                //return "redirect:http://localhost:8080/user/dashboard?username=" + user.getUsername() + "&role=" + user.getRole();
+                return "redirect:http://localhost:8080/user/dashboard?userId=" + user.getId()
+                        + "&username=" + user.getUsername()
+                        + "&role=" + user.getRole();
 
 
                 //return "redirect:http://localhost:8080/user/dashboard";

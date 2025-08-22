@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Admin Products Management</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+</head>
+<body>
+<div class="container mt-5">
+    <h2 class="mb-4">Product Management</h2>
+
+    <!-- Back to Dashboard -->
+    <a th:href="@{/admin/dashboard}" class="btn btn-secondary mb-3">⬅ Back to Dashboard</a>
+
+    <!-- Add New Product Form -->
+    <div class="card mb-5">
+        <div class="card-header bg-primary text-white">
+            Add New Product
+        </div>
+        <div class="card-body">
+            <form th:action="@{/admin/products/add}" th:object="${newProduct}" method="post" class="row g-3">
+                <div class="col-md-3">
+                    <input type="text" th:field="*{name}" class="form-control" placeholder="Product Name" required />
+                </div>
+                <div class="col-md-3">
+                    <input type="text" th:field="*{company}" class="form-control" placeholder="Company Name" required />
+                </div>
+                <div class="col-md-2">
+                    <input type="number" th:field="*{quantity}" class="form-control" placeholder="Quantity" required min="0" />
+                </div>
+                <div class="col-md-2">
+                    <input type="number" step="0.01" th:field="*{price}" class="form-control" placeholder="Price" required min="0" />
+                </div>
+                <div class="col-md-2">
+                    <button type="submit" class="btn btn-success w-100">Add Product</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Products Table -->
+    <div class="table-responsive">
+        <table class="table table-bordered table-hover align-middle text-center">
+            <thead class="table-secondary">
+            <tr>
+                <th>Product Name</th>
+                <th>Company</th>
+                <th>Quantity</th>
+                <th>Price</th>
+                <th style="width: 220px;">Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="product : ${products}">
+                <!-- Update Form -->
+                <form th:action="@{/admin/products/update}" th:object="${product}" method="post">
+                    <td>
+                        <input type="hidden" th:field="*{id}" />
+                        <input type="text" th:field="*{name}" class="form-control" required />
+                    </td>
+                    <td>
+                        <input type="text" th:field="*{company}" class="form-control" required />
+                    </td>
+                    <td>
+                        <input type="number" th:field="*{quantity}" class="form-control" min="0" required />
+                    </td>
+                    <td>
+                        <input type="number" th:field="*{price}" class="form-control" step="0.01" min="0" required />
+                    </td>
+                    <td class="d-flex justify-content-center gap-2">
+                        <button type="submit" class="btn btn-primary btn-sm">Update</button>
+                </form>
+                <!-- Delete Form -->
+                <form th:action="@{/admin/products/delete/{id}(id=${product.id})}" method="post"
+                      onsubmit="return confirm('Are you sure you want to delete this product?');">
+                    <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                </form>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Bootstrap JS Bundle -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
+
+
+
+
+
