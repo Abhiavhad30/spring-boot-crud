@@ -10,6 +10,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.List;
 
 @Controller
@@ -40,6 +41,7 @@ public class UserController {
 
         User user = userRepository.findByUsername(sessionUsername);
         if (user != null) {
+            session.setAttribute("loggedInUser",user);
             model.addAttribute("username", user.getUsername());
             model.addAttribute("role", user.getRole());
             model.addAttribute("email", user.getEmail());
@@ -54,6 +56,14 @@ public class UserController {
         List<Product> products = productClientService.getAllProducts();
         model.addAttribute("products", products);
         return "user/user-products";
+    }
+
+    @GetMapping("/profile")
+    public String viewProfile(Model model, @SessionAttribute("loggedInUser") User user){
+        model.addAttribute("username", user.getUsername());
+        model.addAttribute("email", user.getEmail());
+        model.addAttribute("role", "USER");
+        return "user/profile";
     }
 
 

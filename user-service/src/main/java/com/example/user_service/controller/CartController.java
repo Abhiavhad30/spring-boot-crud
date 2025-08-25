@@ -16,22 +16,22 @@ public class CartController {
     @Autowired
     private CartService cartService;
 
-    // ✅ View Cart (get userId from session)
+    //  View Cart (get userId from session)
     @GetMapping("/cart")
     public String viewCart(HttpSession session, Model model) {
         String userId = (String) session.getAttribute("userId");
         if (userId == null) {
-            return "redirect:/login"; // not logged in
+            return "redirect:/login";
         }
         Cart cart = cartService.getCartByUserId(userId);
         model.addAttribute("cart", cart);
-        return "user/user-cart"; // your JSP/Thymeleaf view
+        return "user/user-cart";
     }
 
-    // ✅ Add item to cart
+    //  Add item to cart
     @PostMapping("/cart/add")
     public String addToCart(HttpSession session, @ModelAttribute CartItem item, Model model) {
-        String userId = (String) session.getAttribute("userId"); // fixed: use "userId"
+        String userId = (String) session.getAttribute("userId");
         if (userId == null) {
             return "redirect:/login";
         }
@@ -42,16 +42,28 @@ public class CartController {
         return "user/user-cart";
     }
 
-    // ✅ Clear cart
-    @PostMapping("/cart/clear")
-    public String clearCart(HttpSession session) {
-        String userId = (String) session.getAttribute("userId"); // fixed: use "userId"
+    @PostMapping("/cart/remove")
+    public String removeItemFromCart(HttpSession session, @RequestParam("productId") String productId) {
+        String userId = (String) session.getAttribute("userId");
         if (userId == null) {
             return "redirect:/login";
         }
-        cartService.clearCart(userId);
+        cartService.removeItem(userId, productId); // See note below
         return "redirect:/user/cart";
     }
+
+//    @PostMapping("/cart/clear")
+//    public String clearCart(HttpSession session) {
+//        String userId = (String) session.getAttribute("userId");
+//        if (userId == null) {
+//            return "redirect:/login";
+//        }
+//        cartService.clearCart(userId);
+//        return "redirect:/user/cart";
+//    }
+
+
+
 }
 
 

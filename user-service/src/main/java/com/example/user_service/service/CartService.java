@@ -42,9 +42,16 @@ public class CartService {
         return cartRepository.save(cart);
     }
 
-    // ✅ Clear cart
-    public void clearCart(String userId) {
-        cartRepository.findByUserId(userId).ifPresent(cartRepository::delete);
-    }
+//    // ✅ Clear cart
+//    public void clearCart(String userId) {
+//        cartRepository.findByUserId(userId).ifPresent(cartRepository::delete);
+//    }
+// Remove a single item from cart by productId
+public void removeItem(String userId, String productId) {
+    Cart cart = getCartByUserId(userId);
+    cart.getItems().removeIf(item -> item.getProductId().equals(productId));
+    cartRepository.save(cart);
+}
+
 }
 

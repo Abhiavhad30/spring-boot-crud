@@ -66,4 +66,9 @@ public class ProductController {
             return productRepository.findAll();
         }
     }
+
+    @GetMapping("/count")
+    public long getProductCount(){
+        return productRepository.count();
+    }
 }

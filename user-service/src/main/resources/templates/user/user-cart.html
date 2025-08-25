@@ -16,6 +16,7 @@
         <th>Quantity</th>
         <th>Price</th>
         <th>Total</th>
+        <th>Action</th>
     </tr>
     </thead>
     <tbody>
@@ -24,11 +25,28 @@
         <td th:text="${item.quantity}"></td>
         <td th:text="${item.price}"></td>
         <td th:text="${item.price * item.quantity}"></td>
+        <td>
+            <form th:action="@{/user/cart/remove}" method="post" style="display:inline;">
+                <input type="hidden" name="productId" th:value="${item.productId}" />
+                <button type="submit" class="btn btn-danger btn-sm">Remove</button>
+            </form>
+        </td>
     </tr>
     </tbody>
 </table>
+
+<div class="mb-3">
+    <form th:action="@{/user/cart/clear}" method="post" style="display:inline;">
+        <button type="submit" class="btn btn-warning">Clear Cart</button>
+    </form>
+
+    <form th:action="@{/user/cart/buy}" method="post" style="display:inline; margin-left:10px;">
+        <button type="submit" class="btn btn-success">Buy Now</button>
+    </form>
+</div>
 
 <a th:href="@{/user/dashboard}" class="btn btn-secondary">⬅ Back to Dashboard</a>
 
 </body>
 </html>
+

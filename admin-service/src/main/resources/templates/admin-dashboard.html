@@ -1,56 +1,122 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Admin Dashboard</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <title>ADMIN DASHBOARD</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"/>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            display: flex;
+        }
+        .sidebar {
+            width: 220px;
+            height: 100vh;
+            background: #343a40;
+            color: white;
+            padding-top: 20px;
+            position: fixed;
+        }
+        .sidebar a {
+            color: white;
+            display: block;
+            padding: 10px 20px;
+            text-decoration: none;
+        }
+        .sidebar a:hover {
+            background: #495057;
+        }
+        .content {
+            margin-left: 220px;
+            padding: 20px;
+            width: 100%;
+        }
+    </style>
 </head>
 <body>
-<nav class="navbar navbar-dark bg-dark">
-    <div class="container-fluid">
-        <span class="navbar-brand">Admin Dashboard</span>
-        <a th:href="@{/admin/logout}" class="btn btn-outline-light">Logout</a>
+
+<!-- Sidebar -->
+<div class="sidebar">
+    <h4 class="text-center mb-4">ADMIN</h4>
+    <a th:href="@{/admin/dashboard}">DASHBOARD</a>
+    <a th:href="@{/admin/show-users}">VIEW USERS</a>
+    <a th:href="@{/admin/products}">MANAGE PRODUCTS</a>
+    <a th:href="@{/admin/add-user}">ADD USERS</a>
+    <a th:href="@{/admin/logout}">LOGOUT</a>
+</div>
+
+<!-- Main Content -->
+<div class="content">
+    <h2 class="mb-4">ADMIN DASHBOARD</h2>
+
+    <!-- Stats Cards -->
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <div class="card text-bg-primary shadow">
+                <div class="card-body">
+                    <h5 class="card-title">Total Users</h5>
+                    <h2 id="userCount">0</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card text-bg-success shadow">
+                <div class="card-body">
+                    <h5 class="card-title">Total Products</h5>
+                    <h2 id="productCount">0</h2>
+                </div>
+            </div>
+        </div>
     </div>
-</nav>
 
-<div class="container mt-4">
-    <div class="d-flex justify-content-between mb-3 flex-wrap gap-2">
-        <!-- User Management Buttons -->
-        <a th:href="@{/admin/add-user}" class="btn btn-primary">Add User</a>
-        <a th:href="@{/admin/show-users}" class="btn btn-secondary">Show Users</a>
-
-        <!-- Product Management Buttons -->
-        <a th:href="@{/admin/products}" class="btn btn-success">Manage Products</a>
-        <!-- Optionally add button to add product directly or other product-related quick links -->
-        <!-- <a th:href="@{/admin/products/add}" class="btn btn-info">Add Product</a> -->
+    <!-- Charts -->
+    <div class="row">
+        <div class="col-md-6">
+            <canvas id="barChart"></canvas>
+        </div>
+        <div class="col-md-6">
+            <canvas id="pieChart"></canvas>
+        </div>
     </div>
 </div>
+
+<script>
+    async function loadStats() {
+        const response = await fetch("/admin/stats/counts");
+        const data = await response.json();
+
+        document.getElementById("userCount").innerText = data.users;
+        document.getElementById("productCount").innerText = data.products;
+
+        // Bar Chart
+        new Chart(document.getElementById("barChart"), {
+            type: 'bar',
+            data: {
+                labels: ["Users", "Products"],
+                datasets: [{
+                    label: 'Counts',
+                    data: [data.users, data.products],
+                    backgroundColor: ['#007bff', '#28a745']
+                }]
+            }
+        });
+
+        // Pie Chart
+        new Chart(document.getElementById("pieChart"), {
+            type: 'pie',
+            data: {
+                labels: ["Users", "Products"],
+                datasets: [{
+                    data: [data.users, data.products],
+                    backgroundColor: ['#007bff', '#28a745']
+                }]
+            }
+        });
+    }
+
+    loadStats();
+</script>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
-
-
-
-<!--<!DOCTYPE html>-->
-<!--<html xmlns:th="http://www.thymeleaf.org">-->
-<!--<head>-->
-<!--    <title>Admin Dashboard</title>-->
-<!--    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">-->
-<!--</head>-->
-<!--<body>-->
-<!--<nav class="navbar navbar-dark bg-dark">-->
-<!--    <div class="container-fluid">-->
-<!--        <span class="navbar-brand">Admin Dashboard</span>-->
-<!--        <a th:href="@{/admin/logout}" class="btn btn-outline-light">Logout</a>-->
-<!--    </div>-->
-<!--</nav>-->
-
-<!--<div class="container mt-4">-->
-<!--    <div class="d-flex justify-content-between mb-3">-->
-<!--        <a th:href="@{/admin/add-user}" class="btn btn-primary">Add User</a>-->
-<!--        <a th:href="@{/admin/show-users}" class="btn btn-secondary">Show Users</a>-->
-<!--    </div>-->
-<!--</div>-->
-<!--</body>-->
-<!--</html>-->
 

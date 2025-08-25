@@ -2,13 +2,16 @@ package com.example.admin_service.controller;
 
 import com.example.admin_service.model.User;
 import com.example.admin_service.repository.UserRepository;
+import com.example.admin_service.service.ProductClientService;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("/admin")
@@ -16,6 +19,9 @@ public class AdminController {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private ProductClientService productClientService;
 
     @GetMapping("/dashboard")
     public String dashboard() {
@@ -64,5 +70,11 @@ public class AdminController {
         //return "redirect:/login"; // Redirect to login page
         return "redirect:http://localhost:8080/login"; // Gateway's login URL
 
+    }
+
+
+    @GetMapping("/counts")
+    public long getCount(){
+        return productClientService.getProductCount();
     }
 }

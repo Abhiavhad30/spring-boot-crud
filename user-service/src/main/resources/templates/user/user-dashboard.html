@@ -1,21 +1,62 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
     <title>User Dashboard</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            display: flex;
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        .sidebar {
+            width: 250px;
+            background-color: #343a40;
+            color: white;
+            padding: 20px;
+        }
+
+        .sidebar a {
+            display: block;
+            color: white;
+            text-decoration: none;
+            margin: 15px 0;
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+        .sidebar a:hover {
+            background-color: #495057;
+        }
+
+        .content {
+            flex-grow: 1;
+            padding: 30px;
+        }
+
+        .btn-group {
+            margin-top: 20px;
+        }
+    </style>
 </head>
-<body class="container mt-5">
+<body>
+<div class="sidebar">
+    <h4>Welcome, <span th:text="${username}">User</span></h4>
+    <a th:href="@{/user/profile}">👤 View Profile</a>
+    <a th:href="@{/user/products}">🛍️ View Products</a>
+    <a th:href="@{/user/cart}">🛒 My Cart</a>
+    <a th:href="@{/user/logout}">🚪 Logout</a>
+</div>
 
-<h2 class="mb-4">👤 Welcome, <span th:text="${username}"></span></h2>
-<p><strong>Email:</strong> <span th:text="${email}"></span></p>
-<p><strong>Role:</strong> <span th:text="${role}"></span></p>
-
-<hr>
-
-<a th:href="@{/user/products}" class="btn btn-primary">🛍 View Products</a>
-<a th:href="@{/user/cart}" class="btn btn-warning">🛒 My Cart</a>
-<a th:href="@{/user/logout}" class="btn btn-danger">🚪 Logout</a>
-
+<div class="content">
+    <h3>User Dashboard</h3>
+<!--    <p>Email: <span th:text="${email}"></span></p>-->
+<!--    <p>Role: <span th:text="${role}"></span></p>-->
+</div>
 </body>
 </html>
+
+
+

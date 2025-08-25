@@ -16,7 +16,7 @@ public class ProductClientService {
     private RestTemplate restTemplate;
 
     // Base URL configured to call product-service through API gateway
-    private final String PRODUCT_SERVICE_URL = "http://localhost:8080/api/products";
+    private final String PRODUCT_SERVICE_URL = "http://product-service/api/products";
 
     public List<Product> getAllProducts() {
         ResponseEntity<List<Product>> response = restTemplate.exchange(
@@ -57,6 +57,12 @@ public class ProductClientService {
 
     public void deleteProduct(String productId) {
         restTemplate.delete(PRODUCT_SERVICE_URL + "/" + productId);
+    }
+
+    public long getProductCount(){
+        String url ="http://product-service/api/products/count";
+       return restTemplate.getForObject(url , Long.class);
+
     }
 }
 
