@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Purchase Confirmation</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+</head>
+<body class="container mt-5">
+
+<h2>✅ Purchase Confirmation</h2>
+<p th:text="${message}"></p>
+
+<div th:if="${orderId != null}">
+    <strong>Order ID:</strong> <span id="orderId" th:text="${orderId}"></span>
+</div>
+
+<table class="table table-striped" th:if="${purchasedItems != null}">
+    <thead>
+    <tr>
+        <th>Product</th>
+        <th>Quantity</th>
+        <th>Price (₹)</th>
+        <th>Total (₹)</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="item : ${purchasedItems}">
+        <td th:text="${item.productName}"></td>
+        <td th:text="${item.quantity}"></td>
+        <td th:text="${item.price}"></td>
+        <td th:text="${item.price * item.quantity}"></td>
+    </tr>
+    </tbody>
+</table>
+
+<div th:if="${purchasedItem != null}">
+    <h4>Product: <span th:text="${purchasedItem.productName}"></span></h4>
+    <p>Quantity: <span th:text="${purchaseQty}"></span></p>
+    <p>Price per item: ₹<span th:text="${purchasedItem.price}"></span></p>
+    <p><strong>Total Price:</strong> ₹<span th:text="${totalPrice}"></span></p>
+</div>
+
+<div class="mt-4">
+    <button id="payWithPaypalBtn" class="btn btn-success">💳 Pay with PayPal</button>
+    <a th:href="@{/user/dashboard}" class="btn btn-primary ms-2">⬅ Back to Dashboard</a>
+</div>
+
+<script th:inline="javascript">
+    document.getElementById('payWithPaypalBtn').onclick = async function() {
+        const orderIdElem = document.getElementById('orderId');
+        if (!orderIdElem) {
+            alert('Order ID not found. Payment cannot proceed.');
+            return;
+        }
+        const orderId = orderIdElem.textContent.trim();
+
+        try {
+            const response = await fetch(`/orders/${orderId}/pay`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' }
+            });
+            const data = await response.json();
+            if (data.approval_url) {
+                window.location.href = data.approval_url;
+            } else {
+                alert('Failed to initiate PayPal payment. Please try again.');
+            }
+        } catch (err) {
+            alert('Error initiating payment: ' + err.message);
+        }
+    }
+</script>
+
+</body>
+</html>
+
+
+

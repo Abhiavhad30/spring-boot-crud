@@ -6,6 +6,7 @@ import com.example.user_service.repository.CartRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Optional;
 
 @Service
@@ -42,16 +43,25 @@ public class CartService {
         return cartRepository.save(cart);
     }
 
-//    // ✅ Clear cart
-//    public void clearCart(String userId) {
-//        cartRepository.findByUserId(userId).ifPresent(cartRepository::delete);
-//    }
+
+
+    // ✅ Clear cart
+    public Cart clearCart(String userId) {
+        Cart cart= getCartByUserId(userId);
+        cart.getItems().clear();
+        return cartRepository.save(cart);
+    }
+
 // Remove a single item from cart by productId
-public void removeItem(String userId, String productId) {
+public Cart removeItem(String userId, String productId) {
     Cart cart = getCartByUserId(userId);
     cart.getItems().removeIf(item -> item.getProductId().equals(productId));
-    cartRepository.save(cart);
+    return cartRepository.save(cart);
 }
+
+    public Cart saveCart(Cart cart) {
+        return cartRepository.save(cart);
+    }
 
 }
 

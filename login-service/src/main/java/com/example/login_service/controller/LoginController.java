@@ -30,30 +30,16 @@ public class LoginController {
         User user = userRepository.findByUsername(username);
         if (user != null && user.getPassword().equals(password)) {
             session.setAttribute("userId", user.getId());
-            session.setAttribute("loggedInUsername",user.getUsername());
+            session.setAttribute("username",user.getUsername());
             session.setAttribute("role",user.getRole());
 
             if ("ADMIN".equalsIgnoreCase(user.getRole())) {
-                //model.addAttribute("user", user);
-                //return "redirect:/admin/dashboard";
                 System.out.println("Redirecting to: /admin/dashboard");
-
                 return "redirect:http://localhost:8080/admin/dashboard";
-                //return "redirect:/admin/dashboard";
-
 
             } else {
-                //model.addAttribute("user", user);
-//                return "redirect:/user/dashboard";
                 System.out.println("Redirecting to: /user/dashboard");
-                //return "redirect:http://localhost:8080/user/dashboard?username=" + user.getUsername() + "&role=" + user.getRole();
-                return "redirect:http://localhost:8080/user/dashboard?userId=" + user.getId()
-                        + "&username=" + user.getUsername()
-                        + "&role=" + user.getRole();
-
-
-                //return "redirect:http://localhost:8080/user/dashboard";
-                //return "redirect:/user/dashboard";
+                return "redirect:http://localhost:8080/user/dashboard";
             }
         } else {
             model.addAttribute("error", "Invalid credentials");
@@ -79,7 +65,7 @@ public class LoginController {
         }
         User newuser = new User();
         newuser.setUsername(username);
-        newuser.setEmail(email);     // Set email
+        newuser.setEmail(email);
 
         newuser.setPassword(password);
         newuser.setRole(role);

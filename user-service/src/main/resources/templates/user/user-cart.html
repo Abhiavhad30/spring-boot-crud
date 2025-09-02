@@ -26,7 +26,12 @@
         <td th:text="${item.price}"></td>
         <td th:text="${item.price * item.quantity}"></td>
         <td>
-            <form th:action="@{/user/cart/remove}" method="post" style="display:inline;">
+            <form th:action="@{/user/cart/buy-item}" method="post" style="display:inline;">
+                <input type="hidden" name="productId" th:value="${item.productId}" />
+                <input type="number" name="quantity" th:value="${item.quantity}" min="1" max="${item.quantity}" style="width:60px;" required />
+                <button type="submit" class="btn btn-success btn-sm">Buy</button>
+            </form>
+            <form th:action="@{/user/cart/remove}" method="post" style="display:inline; margin-left:5px;">
                 <input type="hidden" name="productId" th:value="${item.productId}" />
                 <button type="submit" class="btn btn-danger btn-sm">Remove</button>
             </form>

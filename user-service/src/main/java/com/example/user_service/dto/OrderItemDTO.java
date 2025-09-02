@@ -1,19 +1,12 @@
-package com.example.user_service.model;
+package com.example.user_service.dto;
 
-import java.io.Serializable;
+public class OrderItemDTO {
 
-public class CartItem implements Serializable {
-
-    private static final long serialVersionUID = 1L;
-
-
-    private int quantity;
-    private double price;
     private String productId;
     private String productName;
+    private int quantity;
+    private double price;
 
-    public CartItem() {
-    }
 
     public String getProductId() {
         return productId;
@@ -47,14 +40,14 @@ public class CartItem implements Serializable {
         this.price = price;
     }
 
-    
 
-    public CartItem(String productId, String productName, int quantity, double price) {
+    // Constructors, getters and setters
+    public OrderItemDTO() {}
+
+    public OrderItemDTO(String productId, String productName, int quantity, double price) {
         this.productId = productId;
         this.productName = productName;
         this.quantity = quantity;
         this.price = price;
     }
-
-    
 }
