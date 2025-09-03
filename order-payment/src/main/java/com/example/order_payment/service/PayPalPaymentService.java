@@ -8,6 +8,7 @@ import org.springframework.web.client.RestTemplate;
 
 import java.util.Base64;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Service
 public class PayPalPaymentService {
@@ -22,6 +23,9 @@ public class PayPalPaymentService {
     private String baseUrl;
 
     private RestTemplate restTemplate = new RestTemplate();
+
+    private Map<String, String> paymentOrderMapping = new ConcurrentHashMap<>();
+
 
     private String getAccessToken() {
         String auth = clientId + ":" + clientSecret;
@@ -56,8 +60,8 @@ public class PayPalPaymentService {
         String paymentJson = "{\n" +
                 "  \"intent\": \"sale\",\n" +
                 "  \"redirect_urls\": {\n" +
-                "    \"return_url\": \"http://localhost:8080/orders/paypal/success\",\n" +
-                "    \"cancel_url\": \"http://localhost:8080/orders/paypal/cancel\"\n" +
+                "    \"return_url\": \"http://localhost:8080/user/paypal/success\",\n" +
+                "    \"cancel_url\": \"http://localhost:8080/user/paypal/cancel\"\n" +
                 "  },\n" +
                 "  \"payer\": { \"payment_method\": \"paypal\" },\n" +
                 "  \"transactions\": [{\n" +
@@ -79,6 +83,10 @@ public class PayPalPaymentService {
 
         Map<String, Object> responseBody = response.getBody();
 
+        String paymentId = (String) responseBody.get("id");
+        paymentOrderMapping.put(paymentId, order.getId());
+
+
         for (Map<String, Object> link : (Iterable<Map<String, Object>>) responseBody.get("links")) {
             if ("approval_url".equals(link.get("rel"))) {
                 return (String) link.get("href");
@@ -87,4 +95,34 @@ public class PayPalPaymentService {
 
         throw new RuntimeException("No approval_url found in PayPal response");
     }
+    // Execute approved payment
+    public void executePayment(String paymentId, String payerId) {
+        String accessToken = getAccessToken();
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setBearerAuth(accessToken);
+        headers.setContentType(MediaType.APPLICATION_JSON);
+
+        String payload = "{ \"payer_id\": \"" + payerId + "\" }";
+        HttpEntity<String> request = new HttpEntity<>(payload, headers);
+
+        ResponseEntity<Map> response = restTemplate.postForEntity(
+                baseUrl + "/v1/payments/payment/" + paymentId + "/execute",
+                request,
+                Map.class
+        );
+
+        Map<String, Object> body = response.getBody();
+        String state = (String) body.get("state");
+        if (!"approved".equalsIgnoreCase(state)) {
+            throw new RuntimeException("Payment execution not approved, state: " + state);
+        }
+    }
+
+    // Retrieve orderId from paymentId
+    public String getOrderIdByPaymentId(String paymentId) {
+        return paymentOrderMapping.get(paymentId);
+    }
+
+
 }

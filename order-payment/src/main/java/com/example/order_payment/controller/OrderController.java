@@ -3,16 +3,20 @@ package com.example.order_payment.controller;
 import com.example.order_payment.model.Order;
 import com.example.order_payment.service.OrderService;
 import com.example.order_payment.service.PayPalPaymentService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.ui.Model;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
-@RestController
+@Controller
 @RequestMapping("/orders")
 public class OrderController {
+
+    private static final Logger logger = LoggerFactory.getLogger(OrderController.class);
 
     @Autowired
     private OrderService orderService;
@@ -46,7 +50,7 @@ public class OrderController {
         }
     }
 
-    // Placeholder endpoint for payment initiation (to implement later)
+    // Payment initiation (create PayPal payment)
     @PostMapping("/{orderId}/pay")
     public ResponseEntity<Map<String, String>> initiatePayment(@PathVariable String orderId) {
         Order order = orderService.getOrderById(orderId)
@@ -56,40 +60,21 @@ public class OrderController {
 
         return ResponseEntity.ok(Map.of("approval_url", approvalUrl));
     }
-    // New endpoint to handle PayPal payment success redirect
-    @GetMapping("/paypal/success")
-    public String paymentSuccess(Model model, @RequestParam Map<String,String> params) {
-        String token = params.get("token");
-        String payerId = params.get("PayerID");
-        model.addAttribute("message", "Payment successful! Thank you for your order.");
-        return "user/purchase-confirmation";
+
+    @PostMapping("/paypal/execute")
+    public ResponseEntity<?> executePayment(@RequestParam String paymentId, @RequestParam String PayerID) {
+        try {
+            payPalPaymentService.executePayment(paymentId, PayerID);
+
+            String orderId = payPalPaymentService.getOrderIdByPaymentId(paymentId);
+
+            orderService.updateOrderStatus(orderId, "PAID");
+
+            return ResponseEntity.ok().build();
+        } catch (Exception e) {
+            logger.error("Payment execution failed: ", e);
+            return ResponseEntity.status(500).body("Payment execution failed: " + e.getMessage());
+        }
     }
-
-    // New endpoint to handle PayPal payment cancel redirect
-    @GetMapping("/paypal/cancel")
-    public String paymentCancel(Model model, @RequestParam Map<String,String> params) {
-        String token = params.get("token");
-        model.addAttribute("message", "Payment was cancelled. No charges were made.");
-        return "user/payment-cancel"; //
-    }
-
-
-
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 

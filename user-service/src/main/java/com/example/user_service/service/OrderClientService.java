@@ -12,12 +12,11 @@ public class OrderClientService {
     @Autowired
     private RestTemplate restTemplate;
 
-    // Using API Gateway URL for order-payment-service
+    // Using API Gateway or order-payment-service base URL
     private static final String ORDER_PAYMENT_SERVICE_URL = "http://localhost:8080/orders";
 
-
+    // Create order & get PayPal approval URL
     public String createOrderAndGetPaymentUrl(OrderDTO orderDto) {
-        // Create order via API Gateway
         ResponseEntity<OrderDTO> responseEntity = restTemplate.postForEntity(
                 ORDER_PAYMENT_SERVICE_URL, orderDto, OrderDTO.class);
         OrderDTO createdOrder = responseEntity.getBody();
@@ -26,23 +25,34 @@ public class OrderClientService {
             throw new RuntimeException("Failed to create order or order ID is missing");
         }
 
-        // Initiate PayPal payment, get approval URL
         String approvalUrl = restTemplate.postForObject(
                 ORDER_PAYMENT_SERVICE_URL + "/" + createdOrder.getId() + "/pay",
                 null,
                 String.class);
 
-        // Update the orderDto with the generated order ID for UI reference
         orderDto.setOrderIdForUI(createdOrder.getId());
-
         return approvalUrl;
     }
 
+    // Create order only
     public OrderDTO createOrder(OrderDTO orderDto) {
         return restTemplate.postForObject(ORDER_PAYMENT_SERVICE_URL, orderDto, OrderDTO.class);
     }
 
+    // Fetch order details
     public OrderDTO getOrderById(String orderId) {
         return restTemplate.getForObject(ORDER_PAYMENT_SERVICE_URL + "/" + orderId, OrderDTO.class);
+    }
+
+    // Execute PayPal payment after approval
+    public void executePayment(String paymentId, String payerId) {
+        String url = ORDER_PAYMENT_SERVICE_URL + "/paypal/execute?paymentId=" + paymentId + "&PayerID=" + payerId;
+        restTemplate.postForObject(url, null, Void.class);
+    }
+
+    // Update order status (e.g., "PAID", "CANCELLED")
+    public void updateOrderStatus(String orderId, String status) {
+        String url = ORDER_PAYMENT_SERVICE_URL + "/" + orderId + "/status?status=" + status;
+        restTemplate.postForEntity(url, null, Void.class);
     }
 }

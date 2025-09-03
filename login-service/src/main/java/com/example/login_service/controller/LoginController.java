@@ -31,6 +31,7 @@ public class LoginController {
         if (user != null && user.getPassword().equals(password)) {
             session.setAttribute("userId", user.getId());
             session.setAttribute("username",user.getUsername());
+            session.setAttribute("email",user.getEmail());
             session.setAttribute("role",user.getRole());
 
             if ("ADMIN".equalsIgnoreCase(user.getRole())) {
